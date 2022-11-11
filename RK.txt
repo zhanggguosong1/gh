@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+	char* re;
+	char* s1 = "abcasdfffffffffasdfffffffffffffffffffffffasdfdef";
+	char* s2 = "cdasdfasfasfasdffffffffffffffffffffasdfasdfe";
+
+	int n = strlen(s1);
+	int m = strlen(s2);
+	if (n < m)
+	{
+		re = 0;
+		return 0;
+	}
+
+	unsigned long long int base = 1;
+	unsigned long long int hashcodeS2 = 0;
+	for (int i = 0; i < m; ++i)    //e 4 d 3 c 2
+	{
+		int v = s2[m - 1 - i] - 'a';
+		hashcodeS2 += v * base;
+		base = base * 26;
+	}
+
+
+	base = 1;
+	unsigned long long int hashcodeS1 = 0;
+	for (int i = 0; i < m; ++i)
+	{
+		int v = s1[m - 1 - i] - 'a';
+		hashcodeS1 += v * base;
+		base = base * 26;
+	}
+
+	base = base / 26;
+
+	if (hashcodeS1 == hashcodeS2)
+	{
+		re = s1;
+	}
+	else
+	{
+		int flag = 0;
+		for (int i = 1; i <= n - m; ++i)
+		{
+			hashcodeS1 = hashcodeS1 - (s1[i - 1] - 'a') * base;
+			hashcodeS1 = hashcodeS1 * 26;
+			hashcodeS1 = hashcodeS1 + (s1[i + m - 1] - 'a');
+			if (hashcodeS1 == hashcodeS2)
+			{
+				re = s1 + i;
+				flag = 1;
+				break;
+			}
+		}
+		if(flag == 0)
+		{
+			re = 0;
+		}
+	}
+
+	return 0;
+}
+
