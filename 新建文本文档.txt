@@ -1,0 +1,148 @@
+#include <stdio.h>
+#include <string.h>
+unsigned int my_strlen(char* s);
+char* my_strcpy(char* des, char* src);
+int my_strcmp(char* s1, char* s2);
+char* my_strcat(char* des, char* src);
+char* my_strstr(char* s1, char* s2);
+
+int main()
+{
+	char str[10];
+
+	str[0] = 'a';
+	str[1] = 'b';
+	str[2] = '\0';
+
+	char* str1 = "abcdef";
+	printf("%d\n", strlen(str));
+	printf("%d\n", my_strlen(str));
+	printf("%d\n", strlen("asdfasfasf"));
+	printf("%d\n", my_strlen("asdfasfasf"));
+	printf("%d\n", strlen(str1));
+	printf("%d\n", my_strlen(str1));
+
+	printf("%s\n", strcpy(str, "asdfas"));
+	printf("%s\n", my_strcpy(str, "asdfas"));
+
+	printf("%d\n", strcmp(str, "asdfas"));
+	printf("%d\n", my_strcmp(str, "asdfas"));
+
+	//printf("%s\n", strcat(str, "ef"));
+	printf("%s\n", my_strcat(str, "ef"));
+	//printf("%s", str);
+	//str asdfasef
+	char* ssss = strstr(str, "sd");
+
+	char* p = my_strstr("abcdef", "cd");
+	return 0;
+}
+
+unsigned int my_strlen(char* s)
+{
+	unsigned int len = 0;
+	while(1)
+	{
+		if(*(s+len) == 0)
+		{
+			break;
+		}
+		++len;
+	}
+	return len;
+}
+
+char* my_strcpy(char* des, char* src)
+{
+	int index = 0;
+	while(1)
+	{
+		if(*(src+index) == 0)
+		{
+			break;
+		}
+		*(des+index) = *(src+index);
+		++index;
+	}
+	*(des+index) = 0;
+	return des;
+}
+
+int my_strcmp(char* s1, char* s2)
+{
+	int result;
+	int index = 0;
+	while(1)
+	{
+		if(s1[index] == 0 || s2[index] == 0 )
+		{
+			break;
+		}
+		if(s1[index] > s2[index])
+		{
+			return 1;
+		}
+		if(s1[index] < s2[index])
+		{
+			return -1;
+		}
+		++index;
+	}
+	if(s1[index] == 0 && s2[index] == 0)
+	{
+		return 0;
+	}
+	else
+	{
+		if(s1[index] == 0)
+		{
+			return -1;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+}
+
+char* my_strcat(char* des, char* src)  //abc  abc
+{
+	int len1 = strlen(des);
+	int index = 0;
+	while(1)
+	{
+		if(src[index] == 0)
+		{
+			break;
+		}
+		des[len1 + index] = src[index];
+		++index;
+	}
+	des[len1 + index] = 0;
+	return des;
+}
+
+char* my_strstr(char* s1, char* s2) //abcdef //cd
+{
+	int n = strlen(s1);  //6
+	int m = strlen(s2);  //2
+
+	for(int i = 0; i <= n - m; ++i )
+	{
+		int flag = 0;
+		for(int j = 0; j < m; ++j)
+		{
+			if(s1[i + j] != s2[j])
+			{
+				flag = 1;
+				break;
+			}
+		}
+		if(flag == 0)
+		{
+			return s1 + i;
+		}
+	}
+	return 0;
+}
+
