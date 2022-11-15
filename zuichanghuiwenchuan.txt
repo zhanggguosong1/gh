@@ -1,0 +1,232 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+//char* sm_strstr(const char* str, const char* substr);
+//char* kmp_strstr(const char* str, const char* substr);
+
+int main()
+{
+	char* s = "babad";
+	int n = strlen(s);
+
+	int** dp = (int**)malloc(n*sizeof(int*));
+
+	for(int i = 0; i < n; ++i)
+	{
+		dp[i] = (int*)malloc(n*sizeof(int));
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		dp[i][i] = 1;
+		int j;
+		j = i + 1;
+		if (j <= n - 1)
+		{
+			if (s[i] == s[j])
+			{
+				dp[i][j] = 1;
+			}
+			else
+			{
+				dp[i][j] = 0;
+			}
+		}
+		j = i + 2;
+		if (j <= n - 1)
+		{
+			if (s[i] == s[j])
+			{
+				dp[i][j] = 1;
+			}
+			else
+			{
+				dp[i][j] = 0;
+			}
+		}
+	}
+
+	for (int l = 4; l <= n; ++l)
+	{
+		for (int i = 0; i <= n - l; ++i)
+		{
+			int j = i + l - 1;
+			if (dp[i + 1][j - 1] == 1 && s[i] == s[j])
+			{
+				dp[i][j] = 1;
+			}
+			else
+			{
+				dp[i][j] = 0;
+			}
+		}
+	}
+
+	int index = -1;
+	int len = 0;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = i; j < n; ++j)
+		{
+			if (dp[i][j] == 1)
+			{
+				if (j - i + 1 > len)
+				{
+					len = j - i + 1;
+					index = i;
+				}
+			}
+		}
+	}
+
+	for(int i = index; i < index + len; ++i)
+	{
+		printf("%c", s[i]);
+	}
+
+	for(int i = 0; i < n; ++i)
+	{
+		free(dp[i]);
+	}
+
+	free(dp);
+	//const char* s1 = "ababxabababab";
+	//const char* s2 = "ababa";
+	//char* p = sm_strstr(s1, s2);
+	//char* p1 = kmp_strstr(s1, s2);
+	return 0;
+}
+/*
+char* kmp_strstr(const char* str, const char* substr)
+{
+	unsigned int m = strlen(substr);
+	if (m == 0)
+	{
+		return (char*)str;
+	}
+	unsigned int n = strlen(str);
+	if (n == 0)
+	{
+		return NULL;
+	}
+	if (n < m)
+	{
+		return NULL;
+	}
+	int* next = (int*)malloc(m * sizeof(int));
+	next[0] = -1;
+	int j = -1;
+	int i = 0;
+	while (1)
+	{
+		if (i == m - 1)
+		{
+			break;
+		}
+
+		while (1)
+		{
+			if (j == -1 || substr[i] == substr[j])
+			{
+				break;
+			}
+			j = next[j];
+		}
+
+		++i;
+		++j;
+		next[i] = j;
+	}
+
+	j = -1;
+	i = -1;
+	while (1)
+	{
+		if (j == m || i == n)
+		{
+			break;
+		}
+		while (1)
+		{
+			if (j == -1 || str[i] == substr[j])
+			{
+				break;
+			}
+			j = next[j];
+		}
+		++i;
+		++j;
+	}
+	free(next);
+	if (j == m)
+	{
+		return (char*)(str + i - m);
+	}
+	return NULL;
+}
+
+char* sm_strstr(const char* str, const char* substr)
+{
+	unsigned int m = strlen(substr);
+	if (m == 0)
+	{
+		return (char*)str;
+	}
+	unsigned int n = strlen(str);
+	if (n == 0)
+	{
+		return NULL;
+	}
+	if (n < m)
+	{
+		return NULL;
+	}
+
+	int** state = (int**)malloc(m * sizeof(int*));
+	for (int i = 0; i < m; ++i)
+	{
+		state[i] = (int*)calloc(256, sizeof(int));
+	}
+
+	state[0][substr[0]] = 1;
+	int prefix = 0;
+	for (int i = 1; i < m; ++i)
+	{
+		for (int c = 0; c < 256; ++c)
+		{
+			if (substr[i] == c)
+			{
+				state[i][c] = i + 1;
+			}
+			else
+			{
+				state[i][c] = state[prefix][c];
+			}
+		}
+		prefix = state[prefix][substr[i]];
+	}
+	int j = 0;
+	int i;
+	for (i = 0; i < n; ++i)
+	{
+		j = state[j][str[i]];
+		if (j == m)
+		{
+			break;
+		}
+	}
+
+	for (int k = 0; k < m; ++k)
+	{
+		free(state[k]);
+	}
+	free(state);
+
+	if (j == m)
+	{
+		return (char*)(str + i - m + 1);
+	}
+	return NULL;
+}
+*/
